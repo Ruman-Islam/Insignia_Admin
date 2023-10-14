@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:8080/api/v1",
   credentials: "include",
+
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
     if (token) {

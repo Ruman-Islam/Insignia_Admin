@@ -22,7 +22,7 @@ export default {
         brand__font__size__3xl: "74px",
       },
       fontFamily: {
-        brand__font__family: "Poppins",
+        brand__font__family: "Public Sans",
       },
       fontWeight: {
         brand__font__light: "300",
@@ -34,10 +34,14 @@ export default {
       colors: {
         primary: "#1976D2",
         secondary: "#1565c0",
+        danger: "red",
+        brand__heading__text: "#919EAB",
+        brand__detail__text: "#637381",
+        brand__gray__border: "#ffffff4d",
       },
       backgroundImage: {
-        login__bg: "url('../src/assets/images/background/login__page__bg.jpg')"
-      }
+        login__bg: "url('../src/assets/images/background/login__page__bg.jpg')",
+      },
     },
   },
   plugins: [],

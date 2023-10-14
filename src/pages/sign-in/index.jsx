@@ -1,34 +1,21 @@
 import { useEffect, useState } from "react";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
-import { openAlertBox } from "../../redux/features/notification/notificationSlice";
-import { HashLink } from "react-router-hash-link";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { setAuth } from "../../redux/features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import useCookie from "../../hooks/useCookie";
-import {
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Button,
-  Box,
-  Grid,
-  Avatar,
-  Typography,
-  Stack,
-  InputAdornment,
-  IconButton,
-  FormControl,
-} from "@mui/material";
+import { Form, Button, Loader, Checkbox } from "rsuite";
+import { MdLockOutline } from "react-icons/md";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import useToaster from "../../hooks/useToaster";
+import { HashLink } from "react-router-hash-link";
 
 const SignInScreen = () => {
   const { handleSetCookie } = useCookie();
   const navigate = useNavigate();
+  const handleToaster = useToaster();
   const location = useLocation();
   const dispatch = useAppDispatch();
   const from = location.state?.from?.pathname || "/admin";
@@ -55,18 +42,10 @@ const SignInScreen = () => {
   useEffect(() => {
     if (data?.statusCode === 200) {
       handleSetCookie(data.data?.refreshToken);
-      dispatch(
-        openAlertBox({ isAlert: true, message: data.message, type: "success" })
-      );
+      handleToaster(data.message, "success", "Success");
       dispatch(setAuth(data.data));
     } else if (error?.status) {
-      dispatch(
-        openAlertBox({
-          isAlert: true,
-          message: error.data?.errorMessages[0]?.message,
-          type: "error",
-        })
-      );
+      handleToaster(error.data?.errorMessages[0]?.message, "error", "Error");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,37 +61,28 @@ const SignInScreen = () => {
   };
 
   return (
-    <Box className="h-screen flex justify-between">
-      <Box className="bg-login__bg bg-cover bg-center duration-300 basis-[0%] md:basis-[60%]" />
-      <Box className="duration-300 w-full md:basis-[40%] h-full flex flex-col items-center justify-center p-2.5 lg:p-10">
-        <Stack
-          spacing={2}
-          sx={{ width: "100%", display: "flex", alignItems: "center" }}
-        >
-          <Avatar sx={{ bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon size={25} />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <Box
-            component="form"
-            sx={{
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-            }}
-            onSubmit={handleSubmit(onSubmit)}
-          >
-            <FormControl fullWidth margin="normal">
-              <TextField
-                id="email"
-                variant="standard"
-                label="Email Address"
+    <div className="h-screen flex justify-between">
+      <div className="bg-login__bg bg-cover bg-center duration-300 basis-[0%] md:basis-[60%]" />
+      <div className="duration-300 w-full md:basis-[40%] h-full flex flex-col items-center p-2.5 lg:p-10">
+        <div className="w-full">
+          <div className="flex flex-col items-center justify-center py-8">
+            <div className="w-[42px] h-[42px] bg-[#9C27B0] rounded-full flex justify-center items-center text-white text-brand__font__size__xl">
+              <MdLockOutline />
+            </div>
+            <h3 className="text-brand__font__size__lg font-brand__font__semibold">
+              Sign In
+            </h3>
+          </div>
+          <Form fluid onSubmit={handleSubmit(onSubmit)} className="w-full">
+            <div>
+              <input
                 name="email"
-                autoComplete="email"
-                error={errors?.email?.type === "required"}
-                helperText={errors?.email?.message}
+                className={`w-full  border-b-2 outline-none py-2 text-brand__font__size__base duration-500 placeholder:text-brand__font__size__sm ${
+                  errors?.email?.type === "required"
+                    ? "focus:border-danger border-danger placeholder:text-danger"
+                    : "focus:border-primary border-black placeholder:text-brand__detail__text"
+                }`}
+                placeholder="Email Address *"
                 {...register("email", {
                   required: {
                     value: true,
@@ -120,74 +90,84 @@ const SignInScreen = () => {
                   },
                 })}
               />
-            </FormControl>
+              <Form.HelpText>
+                <span className="text-danger mt-0.5 block">
+                  {errors?.email?.type === "required" && errors?.email?.message}
+                </span>
+              </Form.HelpText>
+            </div>
 
-            <FormControl fullWidth margin="normal">
-              <TextField
-                id="password"
-                variant="standard"
+            <div className="relative mt-4">
+              <input
                 name="password"
-                label="Password"
-                autoComplete="current-password"
-                error={errors?.password?.type === "required"}
                 type={showPassword ? "text" : "password"}
-                helperText={errors?.password?.message}
+                className={`w-full  border-b-2 outline-none py-2 text-brand__font__size__base duration-500 placeholder:text-brand__font__size__sm ${
+                  errors?.password?.type === "required"
+                    ? "focus:border-danger border-danger placeholder:text-danger"
+                    : "focus:border-primary border-black placeholder:text-brand__detail__text"
+                }`}
+                placeholder="Password *"
                 {...register("password", {
                   required: {
                     value: true,
                     message: "This field is required",
                   },
                 })}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        sx={{ mb: 1.5 }}
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
               />
-            </FormControl>
+              <Form.HelpText>
+                <span className="text-danger mt-0.5 block">
+                  {" "}
+                  {errors?.password?.type === "required"
+                    ? errors?.password?.message
+                    : ""}
+                </span>
+              </Form.HelpText>
+              <button
+                onClick={handleClickShowPassword}
+                type="button"
+                className={`absolute top-3 right-1.5 text-brand__font__size__xl cursor-pointer ${
+                  errors?.password?.type === "required" && "text-danger"
+                }`}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </button>
+            </div>
 
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
+            <div className="my-2.5">
+              <Checkbox>
+                <span className="block text-brand__font__size__base font-brand__font__semibold">
+                  Remember me
+                </span>
+              </Checkbox>
+            </div>
 
             {isLoading ? (
-              <LoadingButton
-                loading={isLoading}
-                loadingIndicator="Loading..."
-                variant="contained"
-                sx={{ mt: 3, mb: 2, p: 2 }}
-              ></LoadingButton>
+              <Button
+                type="button"
+                disabled
+                className="flex justify-center w-full"
+              >
+                <Loader content="LOADING..." />
+              </Button>
             ) : (
               <Button
                 type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                // appearance="primary"
+                className="bg-primary hover:bg-secondary text-white hover:text-white w-full duration-300"
               >
-                Sign In
+                SIGN IN
               </Button>
             )}
-
-            <Grid container>
-              <Grid item xs>
-                <HashLink to="#" className="text-primary underline">
-                  Forgot password?
-                </HashLink>
-              </Grid>
-            </Grid>
-          </Box>
-        </Stack>
-      </Box>
-    </Box>
+          </Form>
+          <HashLink
+            className="text-left block mt-4 underline text-primary"
+            to="/"
+          >
+            Forgot password?
+          </HashLink>
+        </div>
+      </div>
+    </div>
   );
 };
 

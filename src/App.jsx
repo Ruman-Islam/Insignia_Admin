@@ -1,4 +1,4 @@
-import Notification from "./components/Notification/Notification";
+import "rsuite/dist/rsuite.min.css";
 import { Route, Routes } from "react-router-dom";
 import RequireAuth from "./auth/RequireAuth";
 import publicRoutes from "./routes/publicRoutes";
@@ -31,8 +31,6 @@ function App() {
         </Route>
         <Route path="*" element={<NotFoundScreen />} />
       </Routes>
-
-      <Notification />
     </>
   );
 }

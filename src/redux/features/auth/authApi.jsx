@@ -22,5 +22,5 @@ const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginMutation, useGetRefreshTokenMutation, useTestQuery } =
+export const { useLoginMutation, useGetRefreshTokenMutation } =
   authApi;
