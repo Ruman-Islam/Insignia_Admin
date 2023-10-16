@@ -11,3 +11,36 @@ body {
   box-sizing: border-box;
   background-color: #ebf0f4;
 }
+
+/* For Webkit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #919EAB;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #272727;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+}
+
+.ant-table-thead .ant-table-cell {
+  background-color: #1976d2 !important;
+  color: white !important;
+}
+
+@media only screen and (min-width: 767px) {
+  #sidebar {
+    margin-left: 200px !important;
+  }
+}

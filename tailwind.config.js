@@ -34,7 +34,8 @@ export default {
       colors: {
         primary: "#1976D2",
         secondary: "#1565c0",
-        danger: "red",
+        danger: "#F70000",
+        success: "green",
         brand__heading__text: "#919EAB",
         brand__detail__text: "#637381",
         brand__gray__border: "#ffffff4d",

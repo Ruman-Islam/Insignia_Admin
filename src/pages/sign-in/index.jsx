@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Button, Checkbox, Form, Input } from "antd";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
-import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { setAuth } from "../../redux/features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import useCookie from "../../hooks/useCookie";
-import { Form, Button, Loader, Checkbox } from "rsuite";
 import { MdLockOutline } from "react-icons/md";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import useToaster from "../../hooks/useToaster";
 import { HashLink } from "react-router-hash-link";
 
@@ -19,17 +18,10 @@ const SignInScreen = () => {
   const location = useLocation();
   const dispatch = useAppDispatch();
   const from = location.state?.from?.pathname || "/admin";
-  const [login, { data, error, isLoading }] = useLoginMutation();
-  const [showPassword, setShowPassword] = useState(false);
+  const [login, { data, error }] = useLoginMutation();
   const {
     auth: { user },
   } = useAppSelector((state) => state);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
 
   useEffect(() => {
     if (user) {
@@ -42,28 +34,25 @@ const SignInScreen = () => {
   useEffect(() => {
     if (data?.statusCode === 200) {
       handleSetCookie(data.data?.refreshToken);
-      handleToaster(data.message, "success", "Success");
       dispatch(setAuth(data.data));
     } else if (error?.status) {
-      handleToaster(error.data?.errorMessages[0]?.message, "error", "Error");
+      handleToaster(error.data?.errorMessages[0]?.message, "error");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error]);
 
-  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
-
-  const onSubmit = (data) => {
+  const onFinish = (values) => {
     const options = {
-      data: data,
+      data: values,
     };
     login(options);
   };
 
   return (
-    <div className="h-screen flex justify-between">
+    <div className="h-screen flex justify-between bg-white">
       <div className="bg-login__bg bg-cover bg-center duration-300 basis-[0%] md:basis-[60%]" />
-      <div className="duration-300 w-full md:basis-[40%] h-full flex flex-col items-center p-2.5 lg:p-10">
+      <div className="duration-300 w-full md:basis-[40%] h-full flex flex-col items-center p-2.5 lg:p-10 border justify-center">
         <div className="w-full">
           <div className="flex flex-col items-center justify-center py-8">
             <div className="w-[42px] h-[42px] bg-[#9C27B0] rounded-full flex justify-center items-center text-white text-brand__font__size__xl">
@@ -73,98 +62,71 @@ const SignInScreen = () => {
               Sign In
             </h3>
           </div>
-          <Form fluid onSubmit={handleSubmit(onSubmit)} className="w-full">
-            <div>
-              <input
+          <div className="flex justify-center w-full">
+            <Form
+              name="normal_login"
+              className="login-form w-full"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+            >
+              <Form.Item
                 name="email"
-                className={`w-full  border-b-2 outline-none py-2 text-brand__font__size__base duration-500 placeholder:text-brand__font__size__sm ${
-                  errors?.email?.type === "required"
-                    ? "focus:border-danger border-danger placeholder:text-danger"
-                    : "focus:border-primary border-black placeholder:text-brand__detail__text"
-                }`}
-                placeholder="Email Address *"
-                {...register("email", {
-                  required: {
-                    value: true,
-                    message: "This field is required",
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Email!",
                   },
-                })}
-              />
-              <Form.HelpText>
-                <span className="text-danger mt-0.5 block">
-                  {errors?.email?.type === "required" && errors?.email?.message}
-                </span>
-              </Form.HelpText>
-            </div>
-
-            <div className="relative mt-4">
-              <input
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Email"
+                />
+              </Form.Item>
+              <Form.Item
                 name="password"
-                type={showPassword ? "text" : "password"}
-                className={`w-full  border-b-2 outline-none py-2 text-brand__font__size__base duration-500 placeholder:text-brand__font__size__sm ${
-                  errors?.password?.type === "required"
-                    ? "focus:border-danger border-danger placeholder:text-danger"
-                    : "focus:border-primary border-black placeholder:text-brand__detail__text"
-                }`}
-                placeholder="Password *"
-                {...register("password", {
-                  required: {
-                    value: true,
-                    message: "This field is required",
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your Password!",
                   },
-                })}
-              />
-              <Form.HelpText>
-                <span className="text-danger mt-0.5 block">
-                  {" "}
-                  {errors?.password?.type === "required"
-                    ? errors?.password?.message
-                    : ""}
-                </span>
-              </Form.HelpText>
-              <button
-                onClick={handleClickShowPassword}
-                type="button"
-                className={`absolute top-3 right-1.5 text-brand__font__size__xl cursor-pointer ${
-                  errors?.password?.type === "required" && "text-danger"
-                }`}
+                ]}
               >
-                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-              </button>
-            </div>
+                <Input.Password
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Password"
+                />
+              </Form.Item>
+              <Form.Item>
+                <div className="flex justify-between">
+                  <Form.Item name="remember" valuePropName="checked" noStyle>
+                    <Checkbox>Remember me</Checkbox>
+                  </Form.Item>
 
-            <div className="my-2.5">
-              <Checkbox>
-                <span className="block text-brand__font__size__base font-brand__font__semibold">
-                  Remember me
-                </span>
-              </Checkbox>
-            </div>
+                  <HashLink
+                    to="/"
+                    className="underline hover:underline text-primary"
+                    href=""
+                  >
+                    Forgot password?
+                  </HashLink>
+                </div>
+              </Form.Item>
 
-            {isLoading ? (
-              <Button
-                type="button"
-                disabled
-                className="flex justify-center w-full"
-              >
-                <Loader content="LOADING..." />
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                // appearance="primary"
-                className="bg-primary hover:bg-secondary text-white hover:text-white w-full duration-300"
-              >
-                SIGN IN
-              </Button>
-            )}
-          </Form>
-          <HashLink
-            className="text-left block mt-4 underline text-primary"
-            to="/"
-          >
-            Forgot password?
-          </HashLink>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button bg-primary w-full"
+                >
+                 SIGN UP
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
         </div>
       </div>
     </div>

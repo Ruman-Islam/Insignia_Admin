@@ -1,4 +1,3 @@
-import "rsuite/dist/rsuite.min.css";
 import { Route, Routes } from "react-router-dom";
 import RequireAuth from "./auth/RequireAuth";
 import publicRoutes from "./routes/publicRoutes";

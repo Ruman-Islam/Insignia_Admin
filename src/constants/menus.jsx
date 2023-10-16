@@ -5,12 +5,12 @@ import { BsBookmark } from "react-icons/bs";
 
 export const sidebarOverviews = [
   {
-    route: "/",
+    route: "dashboard",
     title: "Dashboard",
     icon: <RiDashboardLine />,
   },
   {
-    route: "/",
+    route: "",
     title: "Analytics",
     icon: <TbBrandGoogleAnalytics />,
   },
@@ -18,13 +18,18 @@ export const sidebarOverviews = [
 
 export const sidebarManagements = [
   {
-    route: "/",
+    route: "",
     title: "Packages",
     icon: <BiPackage />,
   },
   {
-    route: "/",
+    route: "",
     title: "Bookings",
+    icon: <BsBookmark />,
+  },
+  {
+    route: "faq",
+    title: "FAQ",
     icon: <BsBookmark />,
   },
 ];
