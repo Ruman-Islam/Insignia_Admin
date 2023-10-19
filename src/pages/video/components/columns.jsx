@@ -4,25 +4,28 @@ import { useAppDispatch } from "../../../redux/hook";
 import { setEditValue } from "../../../redux/features/dashboard/dashboardSlice";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { HashLink } from "react-router-hash-link";
 
 export const useColumn = (
   setEditOpen,
-  handleDeleteOneFaq,
-  handleUpdateVisibility
+  handleUpdateVisibility,
+  handleDeleteOneVideo
 ) => {
   const dispatch = useAppDispatch();
 
   const columns = [
     {
-      title: "QUESTION",
+      title: "TITLE",
       dataIndex: "title",
-      width: 400,
     },
 
     {
-      title: "ANSWER",
-      dataIndex: "answer",
-      width: 400,
+      title: "URL",
+      render: ({ youtubeUrl }) => (
+        <HashLink target="_blank" to={youtubeUrl}>
+          {youtubeUrl}
+        </HashLink>
+      ),
     },
 
     {
@@ -39,6 +42,7 @@ export const useColumn = (
     },
     {
       title: "MORE",
+
       width: 100,
       render: (item) => (
         <Menu as="div" className="relative flex justify-center items-center">
@@ -68,7 +72,7 @@ export const useColumn = (
               </Menu.Item>
               <Menu.Item>
                 <button
-                  onClick={() => handleDeleteOneFaq(item.id)}
+                  onClick={() => handleDeleteOneVideo(item.id)}
                   className="flex w-full items-center duration-300 px-4 py-0.5 text-sm capitalize hover:bg-danger hover:text-white gap-x-1"
                 >
                   Delete

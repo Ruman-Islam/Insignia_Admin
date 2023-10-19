@@ -1,30 +1,48 @@
-import { Switch } from "antd";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useAppDispatch } from "../../../redux/hook";
 import { setEditValue } from "../../../redux/features/dashboard/dashboardSlice";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { Avatar, Switch } from "antd";
 
 export const useColumn = (
   setEditOpen,
-  handleDeleteOneFaq,
+  handleDeleteOne,
   handleUpdateVisibility
 ) => {
   const dispatch = useAppDispatch();
 
   const columns = [
     {
-      title: "QUESTION",
-      dataIndex: "title",
-      width: 400,
+      title: "PREVIEW",
+      width: 200,
+      render: (item) =>
+        item?.photo?.cloudinaryUrl ? (
+          <img
+            src={item?.photo?.cloudinaryUrl}
+            className="w-28 h-20 shadow-md border-2 rounded-md object-cover inline-block"
+          />
+        ) : (
+          <Avatar
+            style={{
+              backgroundColor: "#f56a00",
+              verticalAlign: "middle",
+            }}
+            size="large"
+            gap={4}
+          >
+            {item?.photoUrl}
+          </Avatar>
+        ),
     },
-
     {
-      title: "ANSWER",
-      dataIndex: "answer",
-      width: 400,
+      title: "PLACE",
+      dataIndex: "place",
     },
-
+    {
+      title: "DATE",
+      dataIndex: "date",
+    },
     {
       title: "SELECTED",
       width: 100,
@@ -68,7 +86,7 @@ export const useColumn = (
               </Menu.Item>
               <Menu.Item>
                 <button
-                  onClick={() => handleDeleteOneFaq(item.id)}
+                  onClick={() => handleDeleteOne(item.id)}
                   className="flex w-full items-center duration-300 px-4 py-0.5 text-sm capitalize hover:bg-danger hover:text-white gap-x-1"
                 >
                   Delete

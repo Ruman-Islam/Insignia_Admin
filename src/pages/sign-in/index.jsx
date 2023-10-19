@@ -122,7 +122,7 @@ const SignInScreen = () => {
                   htmlType="submit"
                   className="login-form-button bg-primary w-full"
                 >
-                 SIGN UP
+                  SIGN UP
                 </Button>
               </Form.Item>
             </Form>

@@ -22,7 +22,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #919EAB;
+  background-color: #919eab;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -37,10 +37,18 @@ body {
 .ant-table-thead .ant-table-cell {
   background-color: #1976d2 !important;
   color: white !important;
+  text-align: center !important;
+}
+
+.ant-table-row .ant-table-cell {
+  text-align: center !important;
+}
+.ant-table-row .ant-table-cell img {
+  text-align: center !important;
 }
 
 @media only screen and (min-width: 767px) {
   #sidebar {
-    margin-left: 200px !important;
+    margin-left: 230px !important;
   }
 }

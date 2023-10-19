@@ -2,6 +2,7 @@ import { RiDashboardLine } from "react-icons/ri";
 import { TbBrandGoogleAnalytics } from "react-icons/tb";
 import { BiPackage } from "react-icons/bi";
 import { BsBookmark } from "react-icons/bs";
+import { AiFillPlayCircle, AiFillQuestionCircle } from "react-icons/ai";
 
 export const sidebarOverviews = [
   {
@@ -30,7 +31,12 @@ export const sidebarManagements = [
   {
     route: "faq",
     title: "FAQ",
-    icon: <BsBookmark />,
+    icon: <AiFillQuestionCircle />,
+  },
+  {
+    route: "video",
+    title: "Videos",
+    icon: <AiFillPlayCircle />,
   },
 ];
 

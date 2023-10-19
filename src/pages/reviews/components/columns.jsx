@@ -1,30 +1,53 @@
-import { Switch } from "antd";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useAppDispatch } from "../../../redux/hook";
 import { setEditValue } from "../../../redux/features/dashboard/dashboardSlice";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { Avatar, Tag, Rate, Switch } from "antd";
 
 export const useColumn = (
   setEditOpen,
-  handleDeleteOneFaq,
+  handleDeleteOne,
   handleUpdateVisibility
 ) => {
   const dispatch = useAppDispatch();
 
   const columns = [
     {
-      title: "QUESTION",
-      dataIndex: "title",
-      width: 400,
+      title: "AVATAR",
+      width: 100,
+      render: (item) =>
+        item?.photoUrl ? (
+          <img
+            src={item?.photoUrl}
+            className="w-10 h-10 rounded-full object-cover inline-block"
+          />
+        ) : (
+          <Avatar
+            style={{
+              backgroundColor: "#f56a00",
+              verticalAlign: "middle",
+            }}
+            size="large"
+            gap={4}
+          >
+            {item?.photoUrl}
+          </Avatar>
+        ),
     },
-
     {
-      title: "ANSWER",
-      dataIndex: "answer",
-      width: 400,
+      title: "NAME",
+      dataIndex: "name",
     },
-
+    {
+      title: "EMAIL",
+      dataIndex: "email",
+    },
+    {
+      title: "RATING",
+      width: 350,
+      render: (item) => <Rate allowHalf disabled defaultValue={item?.rate} />,
+    },
     {
       title: "SELECTED",
       width: 100,
@@ -36,6 +59,15 @@ export const useColumn = (
           className="bg-brand__heading__text"
         />
       ),
+    },
+    {
+      title: "VIEW",
+      render: (item) =>
+        item?.isRead ? (
+          <Tag color="success">seen</Tag>
+        ) : (
+          <Tag color="processing">unseen</Tag>
+        ),
     },
     {
       title: "MORE",
@@ -63,12 +95,12 @@ export const useColumn = (
                   }}
                   className="flex w-full items-center duration-300 px-4 py-0.5 text-sm capitalize hover:bg-primary hover:text-white gap-x-1 mb-2"
                 >
-                  Edit
+                  View
                 </button>
               </Menu.Item>
               <Menu.Item>
                 <button
-                  onClick={() => handleDeleteOneFaq(item.id)}
+                  onClick={() => handleDeleteOne(item.id)}
                   className="flex w-full items-center duration-300 px-4 py-0.5 text-sm capitalize hover:bg-danger hover:text-white gap-x-1"
                 >
                   Delete

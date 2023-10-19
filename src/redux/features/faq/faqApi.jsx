@@ -56,6 +56,14 @@ const faqApi = api.injectEndpoints({
       }),
       invalidatesTags: ["faq"],
     }),
+    deleteManyFaq: builder.mutation({
+      query: ({ data }) => ({
+        url: `/faq/delete-many`,
+        method: "DELETE",
+        body: data,
+      }),
+      invalidatesTags: ["faq"],
+    }),
   }),
 });
 
@@ -66,4 +74,5 @@ export const {
   useDeleteOneFaqMutation,
   useUpdateOneFaqMutation,
   useUpdateVisibilityMutation,
+  useDeleteManyFaqMutation
 } = faqApi;

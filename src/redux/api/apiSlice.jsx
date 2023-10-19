@@ -2,8 +2,13 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setAuth, logOut } from "../features/auth/authSlice";
 import Cookies from "js-cookie";
 
+// eslint-disable-next-line no-unused-vars
+const productionUrl = "https://insignia-backend.vercel.app/api/v1";
+// eslint-disable-next-line no-unused-vars
+const developmentUrl = "http://localhost:8080/api/v1";
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:8080/api/v1",
+  baseUrl: productionUrl,
   credentials: "include",
 
   prepareHeaders: (headers, { getState }) => {
@@ -49,6 +54,6 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["faq"],
+  tagTypes: ["faq", "video", "question", "review", "photo"],
   endpoints: () => ({}),
 });

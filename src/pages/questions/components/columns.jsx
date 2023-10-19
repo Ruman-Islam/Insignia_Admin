@@ -1,41 +1,31 @@
-import { Switch } from "antd";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useAppDispatch } from "../../../redux/hook";
 import { setEditValue } from "../../../redux/features/dashboard/dashboardSlice";
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment } from "react";
+import { Tag } from "antd";
 
-export const useColumn = (
-  setEditOpen,
-  handleDeleteOneFaq,
-  handleUpdateVisibility
-) => {
+export const useColumn = (setEditOpen, handleDeleteOne) => {
   const dispatch = useAppDispatch();
 
   const columns = [
     {
-      title: "QUESTION",
-      dataIndex: "title",
-      width: 400,
+      title: "NAME",
+      dataIndex: "name",
     },
 
     {
-      title: "ANSWER",
-      dataIndex: "answer",
-      width: 400,
+      title: "EMAIL OR PHONE",
+      dataIndex: "emailOrPhone",
     },
-
     {
-      title: "SELECTED",
-      width: 100,
-      render: (item) => (
-        <Switch
-          size="small"
-          checked={item.isSelected}
-          onClick={() => handleUpdateVisibility(item.id)}
-          className="bg-brand__heading__text"
-        />
-      ),
+      title: "VIEW",
+      render: (item) =>
+        item?.isRead ? (
+          <Tag color="success">seen</Tag>
+        ) : (
+          <Tag color="processing">unseen</Tag>
+        ),
     },
     {
       title: "MORE",
@@ -63,12 +53,12 @@ export const useColumn = (
                   }}
                   className="flex w-full items-center duration-300 px-4 py-0.5 text-sm capitalize hover:bg-primary hover:text-white gap-x-1 mb-2"
                 >
-                  Edit
+                  View
                 </button>
               </Menu.Item>
               <Menu.Item>
                 <button
-                  onClick={() => handleDeleteOneFaq(item.id)}
+                  onClick={() => handleDeleteOne(item.id)}
                   className="flex w-full items-center duration-300 px-4 py-0.5 text-sm capitalize hover:bg-danger hover:text-white gap-x-1"
                 >
                   Delete

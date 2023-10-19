@@ -1,7 +1,97 @@
 import Image from "../../../components/UI/Image";
 import Insignia__logo from "../../../assets/images/brand/Insignia__logo.png";
-import { sidebarManagements, sidebarOverviews } from "../../../constants/menus";
 import { HashLink } from "react-router-hash-link";
+import { RiDashboardLine } from "react-icons/ri";
+import { TbBrandGoogleAnalytics, TbPhotoSquareRounded } from "react-icons/tb";
+import { BiPackage } from "react-icons/bi";
+import { BsBookmark } from "react-icons/bs";
+import { MdOutlineSlowMotionVideo, MdOutlineRateReview } from "react-icons/md";
+import { FaQuora } from "react-icons/fa";
+import { AiOutlineMessage, AiOutlineQuestionCircle } from "react-icons/ai";
+import { Menu } from "antd";
+
+function getItem(label, key, icon, children) {
+  return {
+    key,
+    icon,
+    children,
+    label,
+  };
+}
+
+const items = [
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="dashboard">
+      Dashboard
+    </HashLink>,
+    "1",
+    <RiDashboardLine size={18}/>
+  ),
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="analytics">
+      Analytics
+    </HashLink>,
+    "2",
+    <TbBrandGoogleAnalytics size={18}/>
+  ),
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="packages">
+      Packages
+    </HashLink>,
+    "4",
+    <BiPackage size={18}/>
+  ),
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="bookings">
+      Bookings
+    </HashLink>,
+    "5",
+    <BsBookmark size={18}/>
+  ),
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="faq">
+      FAQ
+    </HashLink>,
+    "6",
+    <FaQuora size={18}/>
+  ),
+
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="video">
+      Videos
+    </HashLink>,
+    "7",
+    <MdOutlineSlowMotionVideo size={18}/>
+  ),
+  getItem(
+    <HashLink className="text-brand__font__size__base" to="photos">
+      photos
+    </HashLink>,
+    "8",
+    <TbPhotoSquareRounded size={18}/>
+  ),
+  getItem(
+    <span className="text-brand__font__size__base">Messages</span>,
+    "sub1",
+    <AiOutlineMessage size={18}/>,
+    [
+      getItem(
+        <HashLink className="text-brand__font__size__base" to="questions">
+          Questions
+        </HashLink>,
+        "10",
+        <AiOutlineQuestionCircle size={18}/>
+      ),
+      getItem(
+        <HashLink className="text-brand__font__size__base" to="reviews">
+          Reviews
+        </HashLink>,
+        "11",
+        <MdOutlineRateReview size={18}/>
+      ),
+    ]
+  ),
+];
 
 const Sidebar = () => {
   return (
@@ -11,42 +101,13 @@ const Sidebar = () => {
       </div>
 
       <div>
-        <div className="mt-2">
-          <h2 className="text-brand__heading__text font-brand__font__semibold px-4 text-brand__font__size__md">
-            Overview
-          </h2>
-        </div>
-        <div>
-          {sidebarOverviews.map(({ route, title, icon }) => (
-            <HashLink
-              key={title}
-              to={route}
-              className="text-white font-brand__font__medium text-brand__font__size__sm px-4 py-2 hover:bg-white hover:text-primary duration-300 hover:no-underline flex items-center gap-x-2"
-            >
-              {icon}
-              <span>{title}</span>
-            </HashLink>
-          ))}
-        </div>
-      </div>
-
-      <div>
-        <div className="mt-2">
-          <h2 className="text-brand__heading__text font-brand__font__semibold px-4 text-brand__font__size__md">
-            Management
-          </h2>
-        </div>
-        <div>
-          {sidebarManagements.map(({ route, title, icon }) => (
-            <HashLink
-              key={title}
-              to={route}
-              className="text-white font-brand__font__medium text-brand__font__size__sm px-4 py-2 hover:bg-white hover:text-primary duration-300 hover:no-underline flex items-center gap-x-2"
-            >
-              {icon}
-              <span> {title}</span>
-            </HashLink>
-          ))}
+        <div className="text-brand__font__size__base">
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={["1"]}
+            mode="inline"
+            items={items}
+          />
         </div>
       </div>
     </aside>

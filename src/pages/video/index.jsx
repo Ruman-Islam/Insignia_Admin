@@ -1,44 +1,44 @@
-/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
-import {
-  useCreateFaqMutation,
-  useDeleteManyFaqMutation,
-  useDeleteOneFaqMutation,
-  useGetFaqQuery,
-  useUpdateOneFaqMutation,
-  useUpdateVisibilityMutation,
-} from "../../redux/features/faq/faqApi";
-import { Form, Input, notification } from "antd";
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { setEditValue } from "../../redux/features/dashboard/dashboardSlice";
-import CustomModal from "../../components/common/CustomModal";
 import { useForm } from "react-hook-form";
-import { useColumn } from "./components/columns";
+import CustomTableHeader from "../../components/common/CustomTable/CustomTableHeader";
+import CustomModal from "../../components/common/CustomModal";
+import { Form, Input, notification } from "antd";
+import {
+  useAddVideoMutation,
+  useDeleteManyVideoMutation,
+  useDeleteOneVideoMutation,
+  useGetAllVideoQuery,
+  useUpdateOneVideoMutation,
+  useUpdateVideoVisibilityMutation,
+} from "../../redux/features/video/videoApi";
 import useToaster from "../../hooks/useToaster";
 import CustomTable from "../../components/common/CustomTable";
-import CustomTableHeader from "../../components/common/CustomTable/CustomTableHeader";
+import { useColumn } from "./components/columns";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { setEditValue } from "../../redux/features/dashboard/dashboardSlice";
 
-const Faq = () => {
+const VideoScreen = () => {
   const [dynamicUrl, setDynamicUrl] = useState({
     page: 1,
     limit: 10,
     searchTerm: "",
     isSelected: "",
   });
-  const { register, handleSubmit, reset } = useForm();
   const [form] = Form.useForm();
-  const [open, setOpen] = useState(false);
-  const [editOpen, setEditOpen] = useState(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const [createFaq, createResult] = useCreateFaqMutation();
-  const [updateOneFaq, updateResult] = useUpdateOneFaqMutation();
-  const [deleteOneFaq, deleteResult] = useDeleteOneFaqMutation();
-  const [updateVisibility, updateVisibilityResult] =
-    useUpdateVisibilityMutation();
-  const [deleteManyFaq, deleteManyFaqResult] = useDeleteManyFaqMutation();
-  const { data, isLoading } = useGetFaqQuery(dynamicUrl);
+  const { register, handleSubmit, reset } = useForm();
   const [api, contextHolder] = notification.useNotification();
   const openNotificationWithIcon = useToaster(api);
+  const [isAddFormOpen, setIsAddFormOpen] = useState(false);
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [addVideo, addVideoResult] = useAddVideoMutation();
+  const [updateOneVideo, updateVideoResult] = useUpdateOneVideoMutation();
+  const [updateVideoVisibility, updateVideoVisibilityResult] =
+    useUpdateVideoVisibilityMutation();
+  const [deleteOneVideo, deleteVideoResult] = useDeleteOneVideoMutation();
+  const [deleteManyVideo, deleteManyVideoResult] = useDeleteManyVideoMutation();
+
+  const { data, isLoading } = useGetAllVideoQuery(dynamicUrl);
 
   const { dashboard } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
@@ -54,120 +54,152 @@ const Faq = () => {
 
   const hasSelected = selectedRowKeys.length > 0;
 
-  const closeCreateModal = () => {
+  const closeAddModal = () => {
     form.resetFields();
-    setOpen(false);
+    setIsAddFormOpen(false);
   };
 
   const closeEditModal = () => {
     dispatch(setEditValue(null));
     reset();
-    setEditOpen(false);
+    setIsEditFormOpen(false);
   };
 
-  const handleCreateFaq = (values) => {
+  const handleAddVideo = (values) => {
     const options = {
       data: values,
     };
-    createFaq(options);
+
+    addVideo(options);
     form.resetFields();
-    closeCreateModal();
+    closeAddModal();
   };
 
-  const handleUpdateForm = (data) => {
+  const handleUpdateVideo = (data) => {
     data.id = dashboard?.editValue?._id;
     const options = {
       data: data,
     };
-    updateOneFaq(options);
+    updateOneVideo(options);
     closeEditModal();
   };
 
-  const handleDeleteOneFaq = (id) => {
-    deleteOneFaq(id);
+  const handleUpdateVisibility = (id) => {
+    updateVideoVisibility(id);
   };
 
-  const handleUpdateVisibility = (id) => {
-    updateVisibility(id);
+  const handleDeleteOne = (id) => {
+    deleteOneVideo(id);
   };
 
   const handleDeleteMany = () => {
     const options = {
       data: selectedRowKeys,
     };
-    deleteManyFaq(options);
+    deleteManyVideo(options);
   };
 
   const { columns } = useColumn(
-    setEditOpen,
-    handleDeleteOneFaq,
-    handleUpdateVisibility
+    setIsEditFormOpen,
+    handleUpdateVisibility,
+    handleDeleteOne
   );
 
   useEffect(() => {
-    if (createResult?.data?.statusCode === 200) {
+    if (addVideoResult?.data?.statusCode === 200) {
       openNotificationWithIcon(
         "success",
         "SUCCESS",
-        createResult?.data?.message
+        addVideoResult?.data?.message
       );
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [createResult]);
-
-  useEffect(() => {
-    if (updateResult?.data?.statusCode === 200) {
+    if (addVideoResult?.error?.status === 400) {
       openNotificationWithIcon(
-        "success",
-        "SUCCESS",
-        updateResult?.data?.message
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateResult]);
-
-  useEffect(() => {
-    if (deleteResult?.data?.statusCode === 200) {
-      openNotificationWithIcon(
-        "success",
-        "SUCCESS",
-        deleteResult?.data?.message
+        "error",
+        "FAILED",
+        addVideoResult?.error?.data?.errorMessages[0]?.message
       );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteResult]);
+  }, [addVideoResult]);
 
   useEffect(() => {
-    if (updateVisibilityResult?.data?.statusCode === 200) {
+    if (updateVideoResult?.data?.statusCode === 200) {
       openNotificationWithIcon(
         "success",
         "SUCCESS",
-        updateVisibilityResult?.data?.message
+        updateVideoResult?.data?.message
       );
     }
+    if (updateVideoResult?.error?.status === 400) {
+      openNotificationWithIcon(
+        "error",
+        "FAILED",
+        updateVideoResult?.error?.data?.errorMessages[0]?.message
+      );
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateVisibilityResult]);
+  }, [updateVideoResult]);
 
   useEffect(() => {
-    if (deleteManyFaqResult?.data?.statusCode === 200) {
+    if (updateVideoVisibilityResult?.data?.statusCode === 200) {
+      openNotificationWithIcon(
+        "success",
+        "SUCCESS",
+        updateVideoVisibilityResult?.data?.message
+      );
+    }
+    if (updateVideoVisibilityResult?.error?.status === 400) {
+      openNotificationWithIcon(
+        "error",
+        "FAILED",
+        updateVideoVisibilityResult?.error?.data?.errorMessages[0]?.message
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateVideoVisibilityResult]);
+
+  useEffect(() => {
+    if (deleteVideoResult?.data?.statusCode === 200) {
+      openNotificationWithIcon(
+        "success",
+        "SUCCESS",
+        deleteVideoResult?.data?.message
+      );
+    }
+    if (deleteVideoResult?.error?.status === 400) {
+      openNotificationWithIcon(
+        "error",
+        "FAILED",
+        deleteVideoResult?.error?.data?.errorMessages[0]?.message
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deleteVideoResult]);
+
+  useEffect(() => {
+    if (deleteManyVideoResult?.data?.statusCode === 200) {
       setSelectedRowKeys([]);
       openNotificationWithIcon(
         "success",
         "SUCCESS",
-        deleteManyFaqResult?.data?.message
+        deleteManyVideoResult?.data?.message
       );
     }
-    if (deleteManyFaqResult?.error?.status === 400) {
+    if (deleteManyVideoResult?.error?.status === 400) {
       openNotificationWithIcon(
         "error",
         "FAILED",
-        deleteManyFaqResult?.error?.data?.errorMessages[0]?.message
+        deleteManyVideoResult?.error?.data?.errorMessages[0]?.message
       );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [deleteManyFaqResult]);
+  }, [deleteManyVideoResult]);
 
   return (
     <>
@@ -175,13 +207,13 @@ const Faq = () => {
         <div className="w-full">
           <div>
             <h1 className="text-brand__font__size__xl text-brand__detail__text border-b">
-              FAQ
+              Videos
             </h1>
           </div>
 
           <div className="w-full">
             <CustomTableHeader
-              handleOpen={() => setOpen(true)}
+              handleOpen={() => setIsAddFormOpen(true)}
               onChange={(value) =>
                 setDynamicUrl({
                   ...dynamicUrl,
@@ -200,7 +232,7 @@ const Faq = () => {
                   label: "Selected",
                 },
               ]}
-              placeholder="Search by title/answer"
+              placeholder="Search by title"
               hasSelected={hasSelected}
               handleDeleteMany={handleDeleteMany}
             />
@@ -226,34 +258,34 @@ const Faq = () => {
         </div>
 
         <CustomModal
-          open={open}
-          closeModal={closeCreateModal}
+          open={isAddFormOpen}
+          closeModal={closeAddModal}
           id="createForm"
-          title="Create FAQ"
+          title="Add Video"
           btnText="Submit"
         >
-          <Form id="createForm" onFinish={handleCreateFaq} form={form}>
+          <Form id="createForm" onFinish={handleAddVideo} form={form}>
             <Form.Item
               name="title"
               rules={[
                 {
                   required: true,
-                  message: "Please input question!",
+                  message: "Please input Title!",
                 },
               ]}
-              label="Question"
+              label="Title"
             >
               <Input.TextArea />
             </Form.Item>
             <Form.Item
-              name="answer"
+              name="youtubeUrl"
               rules={[
                 {
                   required: true,
-                  message: "Please input answer!",
+                  message: "Please input Url!",
                 },
               ]}
-              label="Answer"
+              label="Url"
             >
               <Input.TextArea />
             </Form.Item>
@@ -261,27 +293,27 @@ const Faq = () => {
         </CustomModal>
 
         <CustomModal
-          open={editOpen}
+          open={isEditFormOpen}
           closeModal={closeEditModal}
           id="editForm"
           title="Edit FAQ"
           btnText="Update"
         >
-          <form id="editForm" onSubmit={handleSubmit(handleUpdateForm)}>
+          <form id="editForm" onSubmit={handleSubmit(handleUpdateVideo)}>
             <div className="flex flex-col gap-2">
               <div className="flex gap-1">
                 <label
                   htmlFor="title"
                   className="text-brand__font__size__base my-2 block basis-[10%]"
                 >
-                  Question:
+                  Title:
                 </label>
                 <textarea
                   name="title"
                   id="title"
                   cols="30"
                   rows="2"
-                  placeholder="Question"
+                  placeholder="Title"
                   className=" w-full p-2 basis-[90%] outline-none border rounded-md"
                   defaultValue={dashboard?.editValue?.title}
                   {...register("title")}
@@ -290,29 +322,30 @@ const Faq = () => {
 
               <div className="flex gap-1 max-w-[1000px] w-full">
                 <label
-                  htmlFor="answer"
+                  htmlFor="url"
                   className="text-brand__font__size__base my-2 block basis-[15%]"
                 >
-                  Answer:
+                  URL:
                 </label>
                 <textarea
-                  name="answer"
-                  id="answer"
+                  name="youtubeUrl"
+                  id="url"
                   cols="30"
                   rows="4"
-                  placeholder="Answer"
+                  placeholder="URL"
                   className=" w-full p-2 basis-[85%] outline-none border rounded-md"
-                  defaultValue={dashboard?.editValue?.answer}
-                  {...register("answer")}
+                  defaultValue={dashboard?.editValue?.youtubeUrl}
+                  {...register("youtubeUrl")}
                 />
               </div>
             </div>
           </form>
         </CustomModal>
       </div>
+
       {contextHolder}
     </>
   );
 };
 
-export default Faq;
+export default VideoScreen;
