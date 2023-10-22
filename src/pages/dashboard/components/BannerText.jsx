@@ -9,7 +9,7 @@ import { useEffect } from "react";
 const BannerText = () => {
   const [uploadBannerTitle, { isSuccess, isLoading }] =
     useUploadBannerTitleMutation();
-  const { data, isFetching } = useGetSystemConfigQuery();
+  const { data } = useGetSystemConfigQuery();
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
@@ -25,17 +25,12 @@ const BannerText = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
-
   const onFinish = (values) => {
     const options = {
       data: values,
     };
     uploadBannerTitle(options);
   };
-
-  if (isFetching) {
-    return <h1></h1>;
-  }
 
   return (
     <div className="w-full">

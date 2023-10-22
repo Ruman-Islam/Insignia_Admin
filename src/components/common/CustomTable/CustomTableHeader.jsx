@@ -39,13 +39,14 @@ const CustomTableHeader = ({
         </div>
       </div>
       <div className="flex flex-col md:flex-row gap-2 w-full justify-end">
-        <div className="w-full md:w-[100px]">
+        <div className="w-full md:max-w-[200px]">
           <Select
             className="w-full"
             placeholder="Filter"
             optionFilterProp="children"
             onChange={onChange}
             allowClear
+            mode="multiple"
             options={options}
           />
         </div>

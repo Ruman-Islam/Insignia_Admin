@@ -1,17 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button, Spin, notification } from "antd";
+import { Button, Spin, notification, Carousel } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import Image from "../../../components/UI/Image";
 import { AiOutlineCamera } from "react-icons/ai";
-import { useUploadBannerImgMutation } from "../../../redux/features/dashboard/dashboardApi";
+import {
+  useGetSystemConfigQuery,
+  useUploadBannerImgMutation,
+} from "../../../redux/features/dashboard/dashboardApi";
 
 const Banner = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [uploadBannerImg, { data, error }] = useUploadBannerImgMutation();
+  const [uploadBannerImg, uploadBannerResult] = useUploadBannerImgMutation();
+  const { data } = useGetSystemConfigQuery();
   const [api, contextHolder] = notification.useNotification();
-
   const handleToaster = (type, head, message) => {
     api[type]({
       message: head,
@@ -19,19 +22,29 @@ const Banner = () => {
     });
   };
 
+  const bannerImages = [
+    data?.data?.banner1?.cloudinaryUrl,
+    data?.data?.banner2?.cloudinaryUrl,
+    data?.data?.banner3?.cloudinaryUrl,
+  ];
+
   useEffect(() => {
-    if (data?.statusCode === 200) {
+    if (uploadBannerResult?.data?.statusCode === 200) {
       setLoading(false);
       setImages([]);
-      handleToaster("success", "Success", data?.message);
-    } else if (error?.status) {
+      handleToaster("success", "Success", uploadBannerResult?.data?.message);
+    } else if (uploadBannerResult?.error?.status) {
       setLoading(false);
       setImages([]);
-      handleToaster("error", "Error", error.data?.errorMessages[0]?.message);
+      handleToaster(
+        "error",
+        "Error",
+        uploadBannerResult?.error.data?.errorMessages[0]?.message
+      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error]);
+  }, [uploadBannerResult]);
 
   const onLoadImage = (callBack, reader, id, file) => {
     reader.onload = () => {
@@ -100,6 +113,17 @@ const Banner = () => {
   return (
     <div className="w-full flex flex-col">
       <div className="w-full">
+        <div className="max-w-[600px]">
+          <Carousel autoplay>
+            {bannerImages.map((item, index) => (
+              <Image
+                key={index}
+                src={item}
+                className="w-full h-[200px] object-cover rounded-md"
+              />
+            ))}
+          </Carousel>
+        </div>
         <div className="my-2">
           <h1 className="text-brand__font__size__xl text-brand__detail__text">
             Banner Images

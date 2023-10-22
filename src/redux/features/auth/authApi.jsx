@@ -1,6 +1,5 @@
 import { api } from "../../api/apiSlice";
 
-
 const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
@@ -9,7 +8,6 @@ const authApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["comments"],
     }),
     getRefreshToken: builder.mutation({
       query: ({ data }) => ({
@@ -17,10 +15,35 @@ const authApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
-      invalidatesTags: ["comments"],
+    }),
+    forgetPassword: builder.mutation({
+      query: ({ data }) => ({
+        url: "/auth/admin/forgot/password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({ data }) => ({
+        url: "/auth/admin/reset/password",
+        method: "POST",
+        body: data,
+      }),
+    }),
+    changePassword: builder.mutation({
+      query: ({ data }) => ({
+        url: "/auth/admin/change/password",
+        method: "POST",
+        body: data,
+      }),
     }),
   }),
 });
 
-export const { useLoginMutation, useGetRefreshTokenMutation } =
-  authApi;
+export const {
+  useLoginMutation,
+  useGetRefreshTokenMutation,
+  useForgetPasswordMutation,
+  useResetPasswordMutation,
+  useChangePasswordMutation
+} = authApi;

@@ -22,10 +22,10 @@ const videoApi = api.injectEndpoints({
       query: ({ page, limit, searchTerm, isSelected }) => {
         let url = `/video`;
         url += `?page=${page}&limit=${limit}`;
-        if (searchTerm) {
+        if (searchTerm !== "") {
           url += `&searchTerm=${searchTerm}`;
         }
-        if (isSelected) {
+        if (isSelected !== "") {
           url += `&isSelected=${isSelected}`;
         }
 

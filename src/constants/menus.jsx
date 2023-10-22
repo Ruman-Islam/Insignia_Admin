@@ -43,14 +43,9 @@ export const sidebarManagements = [
 export const userMenuDropdownLinks = [
   {
     title: "Profile",
-    route: "/profile",
-  },
-  {
-    title: "Settings",
-    route: "/",
+    route: "admin-profile",
   },
   {
     title: "Logout",
-    route: "/",
   },
 ];

@@ -10,6 +10,7 @@ body {
   font-family: "Public Sans", sans-serif;
   box-sizing: border-box;
   background-color: #ebf0f4;
+  /* background-color: #000C17; */
 }
 
 /* For Webkit browsers (e.g., Chrome, Safari) */
@@ -46,6 +47,7 @@ body {
 .ant-table-row .ant-table-cell img {
   text-align: center !important;
 }
+
 
 @media only screen and (min-width: 767px) {
   #sidebar {

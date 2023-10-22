@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Form, Input } from "antd";
+import { LockOutlined, UserOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Button, /* Checkbox, */ Form, Input, Spin, notification } from "antd";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { setAuth } from "../../redux/features/auth/authSlice";
@@ -14,11 +14,12 @@ import { HashLink } from "react-router-hash-link";
 const SignInScreen = () => {
   const { handleSetCookie } = useCookie();
   const navigate = useNavigate();
-  const handleToaster = useToaster();
+  const [api, contextHolder] = notification.useNotification();
+  const openNotificationWithIcon = useToaster(api);
   const location = useLocation();
   const dispatch = useAppDispatch();
   const from = location.state?.from?.pathname || "/admin";
-  const [login, { data, error }] = useLoginMutation();
+  const [login, { data, error, isLoading }] = useLoginMutation();
   const {
     auth: { user },
   } = useAppSelector((state) => state);
@@ -33,10 +34,15 @@ const SignInScreen = () => {
 
   useEffect(() => {
     if (data?.statusCode === 200) {
-      handleSetCookie(data.data?.refreshToken);
-      dispatch(setAuth(data.data));
-    } else if (error?.status) {
-      handleToaster(error.data?.errorMessages[0]?.message, "error");
+      handleSetCookie(data?.data?.refreshToken);
+      dispatch(setAuth(data?.data));
+    }
+    if (error?.status === 400) {
+      openNotificationWithIcon(
+        "error",
+        "FAILED",
+        error?.data?.errorMessages[0]?.message
+      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,13 +107,13 @@ const SignInScreen = () => {
                 />
               </Form.Item>
               <Form.Item>
-                <div className="flex justify-between">
-                  <Form.Item name="remember" valuePropName="checked" noStyle>
+                <div className="flex justify-end">
+                  {/* <Form.Item name="remember" valuePropName="checked" noStyle>
                     <Checkbox>Remember me</Checkbox>
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <HashLink
-                    to="/"
+                    to="/forget-password"
                     className="underline hover:underline text-primary"
                     href=""
                   >
@@ -117,18 +123,35 @@ const SignInScreen = () => {
               </Form.Item>
 
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className="login-form-button bg-primary w-full"
-                >
-                  SIGN UP
-                </Button>
+                {isLoading ? (
+                  <div className="w-full flex justify-center">
+                    <Spin
+                      indicator={
+                        <LoadingOutlined
+                          style={{
+                            fontSize: 24,
+                          }}
+                          spin
+                        />
+                      }
+                    />
+                  </div>
+                ) : (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className="login-form-button bg-primary w-full"
+                  >
+                    SIGN IN
+                  </Button>
+                )}
               </Form.Item>
             </Form>
           </div>
         </div>
       </div>
+
+      {contextHolder}
     </div>
   );
 };

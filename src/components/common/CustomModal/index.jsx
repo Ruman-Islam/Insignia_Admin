@@ -13,6 +13,9 @@ const CustomModal = ({
   if (modalType === "form") {
     return (
       <Modal
+        style={{
+          top: 20,
+        }}
         title={title}
         open={open}
         onCancel={closeModal}

@@ -6,10 +6,10 @@ const questionApi = api.injectEndpoints({
       query: ({ page, limit, searchTerm, isRead }) => {
         let url = `/question`;
         url += `?page=${page}&limit=${limit}`;
-        if (searchTerm) {
+        if (searchTerm !== "") {
           url += `&searchTerm=${searchTerm}`;
         }
-        if (isRead) {
+        if (isRead !== "") {
           url += `&isRead=${isRead}`;
         }
 

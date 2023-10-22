@@ -14,10 +14,10 @@ const faqApi = api.injectEndpoints({
       query: ({ page, limit, searchTerm, isSelected }) => {
         let url = `/faq`;
         url += `?page=${page}&limit=${limit}`;
-        if (searchTerm) {
+        if (searchTerm !== "") {
           url += `&searchTerm=${searchTerm}`;
         }
-        if(isSelected) {
+        if (isSelected !== "") {
           url += `&isSelected=${isSelected}`;
         }
 
@@ -74,5 +74,5 @@ export const {
   useDeleteOneFaqMutation,
   useUpdateOneFaqMutation,
   useUpdateVisibilityMutation,
-  useDeleteManyFaqMutation
+  useDeleteManyFaqMutation,
 } = faqApi;

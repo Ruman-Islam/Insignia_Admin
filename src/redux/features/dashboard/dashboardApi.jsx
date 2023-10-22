@@ -8,6 +8,7 @@ const dashboardApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["config"],
     }),
     uploadWindowImg: builder.mutation({
       query: ({ data }) => ({
@@ -15,6 +16,7 @@ const dashboardApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["config"],
     }),
     uploadBannerTitle: builder.mutation({
       query: ({ data }) => ({
@@ -22,12 +24,14 @@ const dashboardApi = api.injectEndpoints({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["config"],
     }),
     getSystemConfig: builder.query({
       query: () => ({
         url: "/admin/get/system-config",
         method: "GET",
       }),
+      providesTags: ["config"],
     }),
   }),
 });

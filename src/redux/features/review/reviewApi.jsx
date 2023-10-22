@@ -6,13 +6,13 @@ const questionApi = api.injectEndpoints({
       query: ({ page, limit, searchTerm, isRead, isSelected }) => {
         let url = `/review`;
         url += `?page=${page}&limit=${limit}`;
-        if (searchTerm) {
+        if (searchTerm !== "") {
           url += `&searchTerm=${searchTerm}`;
         }
-        if (isRead) {
+        if (isRead !== "") {
           url += `&isRead=${isRead}`;
         }
-        if (isSelected) {
+        if (isSelected !== "") {
           url += `&isSelected=${isSelected}`;
         }
 

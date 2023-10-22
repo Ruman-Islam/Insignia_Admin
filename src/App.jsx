@@ -4,7 +4,7 @@ import publicRoutes from "./routes/publicRoutes";
 import privateRoutes from "./routes/privateRoutes";
 import PersistLogin from "./components/PersistLogin";
 import NotFoundScreen from "./pages/not-found";
-import Admin from "./pages/admin";
+import Home from "./pages/home";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           ))}
 
           <Route element={<RequireAuth />}>
-            <Route path="/admin" element={<Admin />}>
+            <Route path="/admin" element={<Home />}>
               {privateRoutes.map(({ path, name, Component }) => (
                 <Route
                   key={name}

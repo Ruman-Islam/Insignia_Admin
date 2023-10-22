@@ -2,15 +2,26 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Image from "../../../components/UI/Image";
 import { AiOutlineCamera } from "react-icons/ai";
-import { useUploadWindowImgMutation } from "../../../redux/features/dashboard/dashboardApi";
-import { Button, Spin, notification } from "antd";
+import {
+  useGetSystemConfigQuery,
+  useUploadWindowImgMutation,
+} from "../../../redux/features/dashboard/dashboardApi";
+import { Button, Spin, notification, Carousel } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 const WindowImages = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [uploadWindowImg, { data, error }] = useUploadWindowImgMutation();
+  const [uploadWindowImg, uploadWindowImgResult] = useUploadWindowImgMutation();
+  const { data } = useGetSystemConfigQuery();
   const [api, contextHolder] = notification.useNotification();
+
+  const windowImages = [
+    data?.data?.window1?.cloudinaryUrl,
+    data?.data?.window2?.cloudinaryUrl,
+    data?.data?.window3?.cloudinaryUrl,
+    data?.data?.window4?.cloudinaryUrl,
+  ];
 
   const handleToaster = (type, head, message) => {
     api[type]({
@@ -20,18 +31,22 @@ const WindowImages = () => {
   };
 
   useEffect(() => {
-    if (data?.statusCode === 200) {
+    if (uploadWindowImgResult?.data?.statusCode === 200) {
       setLoading(false);
       setImages([]);
       handleToaster("success", "Success", data?.message);
-    } else if (error?.status) {
+    } else if (uploadWindowImgResult?.error?.status) {
       setLoading(false);
       setImages([]);
-      handleToaster("error", "Error", error.data?.errorMessages[0]?.message);
+      handleToaster(
+        "error",
+        "Error",
+        uploadWindowImgResult?.error.data?.errorMessages[0]?.message
+      );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, error]);
+  }, [uploadWindowImgResult]);
 
   const onLoadImage = (callBack, reader, id, file) => {
     reader.onload = () => {
@@ -99,6 +114,18 @@ const WindowImages = () => {
   return (
     <div className="w-full flex flex-col">
       <div className="w-full">
+        <div className="max-w-[600px]">
+          <Carousel autoplay>
+            {windowImages.map((item, index) => (
+              <Image
+                key={index}
+                src={item}
+                className="w-full h-[200px] object-cover rounded-md"
+              />
+            ))}
+          </Carousel>
+        </div>
+
         <div className="my-2">
           <h1 className="text-brand__font__size__xl text-brand__detail__text">
             Window Images

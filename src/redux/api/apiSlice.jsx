@@ -8,7 +8,7 @@ const productionUrl = "https://insignia-backend.vercel.app/api/v1";
 const developmentUrl = "http://localhost:8080/api/v1";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: productionUrl,
+  baseUrl: developmentUrl,
   credentials: "include",
 
   prepareHeaders: (headers, { getState }) => {
@@ -54,6 +54,15 @@ const baseQueryWithReAuth = async (args, api, extraOptions) => {
 export const api = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReAuth,
-  tagTypes: ["faq", "video", "question", "review", "photo"],
+  tagTypes: [
+    "config",
+    "faq",
+    "video",
+    "question",
+    "review",
+    "photo",
+    "admin",
+    "user",
+  ],
   endpoints: () => ({}),
 });
