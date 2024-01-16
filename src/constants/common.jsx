@@ -1,3 +1,5 @@
+import { PlusOutlined } from "@ant-design/icons";
+
 export const bannerImages = [
   "https://res.cloudinary.com/dqlxcdlce/image/upload/v1694892824/mamun-srizon-qay3lNDSHzc-unsplash_uzw9gp.jpg",
   "https://res.cloudinary.com/dqlxcdlce/image/upload/v1694894595/chetan-kolte-E43T1qjXtQM-unsplash_evha43.jpg",
@@ -34,3 +36,16 @@ export const faqCarouselResponsiveForPackageDetail = {
     items: 1,
   },
 };
+
+export const uploadButton = (
+  <div>
+    <PlusOutlined />
+    <div
+      style={{
+        marginTop: 8,
+      }}
+    >
+      Upload
+    </div>
+  </div>
+);

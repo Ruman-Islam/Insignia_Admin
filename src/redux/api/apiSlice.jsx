@@ -63,6 +63,7 @@ export const api = createApi({
     "photo",
     "admin",
     "user",
+    "package",
   ],
   endpoints: () => ({}),
 });

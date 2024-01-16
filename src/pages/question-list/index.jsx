@@ -126,7 +126,7 @@ const Questions = () => {
 
   return (
     <>
-      <div className=" bg-white p-4 rounded-md max-w-screen-xl mx-auto w-full shadow-md">
+      <div className=" bg-white p-4 rounded-md max-w-screen-2xl mx-auto w-full shadow-md">
         <div className="w-full">
           <div>
             <h1 className="text-brand__font__size__xl text-brand__detail__text">

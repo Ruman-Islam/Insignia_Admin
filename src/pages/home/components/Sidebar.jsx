@@ -2,7 +2,7 @@ import Image from "../../../components/UI/Image";
 import Insignia__logo from "../../../assets/images/brand/Insignia__logo.png";
 import { HashLink } from "react-router-hash-link";
 import { RiDashboardLine } from "react-icons/ri";
-import { TbBrandGoogleAnalytics, TbPhotoSquareRounded } from "react-icons/tb";
+import { TbPhotoSquareRounded } from "react-icons/tb";
 import { BiPackage } from "react-icons/bi";
 import { BsBookmark, BsPeople } from "react-icons/bs";
 import { MdOutlineSlowMotionVideo, MdOutlineRateReview } from "react-icons/md";
@@ -30,14 +30,7 @@ const items = [
     <RiDashboardLine size={18} />
   ),
   getItem(
-    <HashLink className="text-brand__font__size__base" to="analytics">
-      Analytics
-    </HashLink>,
-    "2",
-    <TbBrandGoogleAnalytics size={18} />
-  ),
-  getItem(
-    <HashLink className="text-brand__font__size__base" to="packages">
+    <HashLink className="text-brand__font__size__base" to="package-list">
       Packages
     </HashLink>,
     "4",

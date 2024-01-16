@@ -29,12 +29,12 @@ const Header = () => {
   }, [data]);
 
   return (
-    <div className="h-[70px] px-4 xl:px-10 shadow-md flex items-center justify-end backdrop-blur-lg bg-white bg-opacity-80 z-50 sticky top-0 max-w-screen-xl mx-auto rounded-bl-md rounded-br-md">
+    <div className="h-[70px] px-4 xl:px-10 shadow-md flex items-center justify-end backdrop-blur-lg bg-white bg-opacity-80 z-50 sticky top-0 max-w-screen-2xl mx-auto rounded-bl-md rounded-br-md">
       <Menu as="div" className="relative">
         <Menu.Button>
           <div className="flex items-center">
             <div className="w-10 h-10 rounded-full border border-[#d65050] flex items-center justify-center">
-              <img src={profile__img} className="rounded-full" />
+              <img src={profile__img} className="rounded-full w-full" />
             </div>
           </div>
         </Menu.Button>

@@ -52,7 +52,7 @@ const ResetPassword = () => {
   }, [data, error]);
 
   const onFinish = (values) => {
-    values.token = token
+    values.token = token;
     const options = {
       data: values,
     };

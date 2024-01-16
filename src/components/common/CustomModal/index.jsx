@@ -15,7 +15,9 @@ const CustomModal = ({
       <Modal
         style={{
           top: 20,
+          maxHeight: 800,
         }}
+        width={700}
         title={title}
         open={open}
         onCancel={closeModal}

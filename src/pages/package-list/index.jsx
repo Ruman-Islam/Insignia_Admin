@@ -1,43 +1,40 @@
 import { useEffect, useState } from "react";
+import { Divider, notification } from "antd";
 import CustomTableHeader from "../../components/common/CustomTable/CustomTableHeader";
+
+import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
+import {
+  useDeleteManyPackageMutation,
+  useDeleteOnePackageMutation,
+  useGetAllPackageQuery,
+  useUpdatePackagePopularityMutation,
+  useUpdatePackageVisibilityMutation,
+} from "../../redux/features/package/packageApi";
 import CustomTable from "../../components/common/CustomTable";
 import { useColumn } from "./components/columns";
-import {
-  useDeleteManyReviewMutation,
-  useDeleteOneReviewMutation,
-  useGetAllReviewQuery,
-  useUpdateReviewVisibilityMutation,
-} from "../../redux/features/review/reviewApi";
-import { Divider, notification } from "antd";
-import CustomModal from "../../components/common/CustomModal";
-import ViewReview from "./components/ViewReview";
-import { useAppDispatch } from "../../redux/hook";
-import { setEditValue } from "../../redux/features/dashboard/dashboardSlice";
 import useToaster from "../../hooks/useToaster";
 
-const Reviews = () => {
+const PackageList = () => {
   const [dynamicUrl, setDynamicUrl] = useState({
     page: 1,
     limit: 10,
     searchTerm: "",
-    isRead: "",
     isSelected: "",
+    isPopular: "",
   });
-
-  const [isReadFormOpen, setIsReadFormOpen] = useState(false);
+  const navigate = useNavigate();
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [api, contextHolder] = notification.useNotification();
   const openNotificationWithIcon = useToaster(api);
-  const [deleteOneReview, deleteOneResult] = useDeleteOneReviewMutation();
-  const [deleteManyReview, deleteManyResult] = useDeleteManyReviewMutation();
-  const [updateReviewVisibility, updateReviewVisibilityResult] =
-    useUpdateReviewVisibilityMutation();
+  const [deleteOnePackage, deleteOneResult] = useDeleteOnePackageMutation();
+  const [deleteManyPackage, deleteManyResult] = useDeleteManyPackageMutation();
+  const [updatePackageVisibility, visibilityResult] =
+    useUpdatePackageVisibilityMutation();
+  const [updatePackagePopularity, popularityResult] =
+    useUpdatePackagePopularityMutation();
 
-  const { data, isLoading } = useGetAllReviewQuery(dynamicUrl, {
-    pollingInterval: 60000,
-  });
-
-  const dispatch = useAppDispatch();
+  const { data, isLoading } = useGetAllPackageQuery(dynamicUrl);
 
   const onSelectChange = (newSelectedRowKeys) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -48,10 +45,7 @@ const Reviews = () => {
     onChange: onSelectChange,
   };
 
-  const closeQuestionReadModal = () => {
-    dispatch(setEditValue(null));
-    setIsReadFormOpen(false);
-  };
+  const hasSelected = selectedRowKeys.length > 0;
 
   const onChange = (values) => {
     // Create a new state object based on the current state
@@ -59,16 +53,15 @@ const Reviews = () => {
       let newState = { ...prevDynamicUrl };
 
       // Reset the values
-      newState.isRead = "";
       newState.isSelected = "";
+      newState.isPopular = "";
 
       for (const val of values) {
-        if (val === "read") {
-          newState.isRead = true;
-        } else if (val === "unread") {
-          newState.isRead = false;
-        } else if (val === "selected") {
+        if (val === "selected") {
           newState.isSelected = true;
+        }
+        if (val === "popular") {
+          newState.isPopular = true;
         }
       }
 
@@ -76,50 +69,74 @@ const Reviews = () => {
     });
   };
 
-  const hasSelected = selectedRowKeys.length > 0;
+  const handleUpdatePopularity = (id) => {
+    updatePackagePopularity(id);
+  };
 
   const handleUpdateVisibility = (id) => {
-    updateReviewVisibility(id);
+    updatePackageVisibility(id);
   };
 
   const handleDeleteOne = (id) => {
-    deleteOneReview(id);
+    deleteOnePackage(id);
   };
 
   const handleDeleteMany = () => {
     const options = {
       data: selectedRowKeys,
     };
-    deleteManyReview(options);
+    deleteManyPackage(options);
   };
 
   const { columns } = useColumn(
-    setIsReadFormOpen,
-    handleDeleteOne,
-    handleUpdateVisibility
+    handleUpdatePopularity,
+    handleUpdateVisibility,
+    handleDeleteOne
   );
 
   useEffect(() => {
-    if (updateReviewVisibilityResult?.data?.statusCode === 200) {
+    if (visibilityResult?.data?.statusCode === 200) {
+      setSelectedRowKeys([]);
       openNotificationWithIcon(
         "success",
         "SUCCESS",
-        updateReviewVisibilityResult?.data?.message
+        visibilityResult?.data?.message
       );
     }
-    if (updateReviewVisibilityResult?.error?.status === 400) {
+    if (visibilityResult?.error?.status === 400) {
       openNotificationWithIcon(
         "error",
         "FAILED",
-        updateReviewVisibilityResult?.error?.data?.errorMessages[0]?.message
+        visibilityResult?.error?.data?.errorMessages[0]?.message
       );
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateReviewVisibilityResult]);
+  }, [visibilityResult]);
+
+  useEffect(() => {
+    if (popularityResult?.data?.statusCode === 200) {
+      setSelectedRowKeys([]);
+      openNotificationWithIcon(
+        "success",
+        "SUCCESS",
+        popularityResult?.data?.message
+      );
+    }
+    if (popularityResult?.error?.status === 400) {
+      openNotificationWithIcon(
+        "error",
+        "FAILED",
+        popularityResult?.error?.data?.errorMessages[0]?.message
+      );
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [popularityResult]);
 
   useEffect(() => {
     if (deleteOneResult?.data?.statusCode === 200) {
+      setSelectedRowKeys([]);
       openNotificationWithIcon(
         "success",
         "SUCCESS",
@@ -163,7 +180,7 @@ const Reviews = () => {
         <div className="w-full">
           <div>
             <h1 className="text-brand__font__size__xl text-brand__detail__text">
-              Customer&rsquo;s Reviews
+              Package list
             </h1>
           </div>
 
@@ -171,7 +188,7 @@ const Reviews = () => {
 
           <div className="w-full">
             <CustomTableHeader
-              handleOpen={() => setIsReadFormOpen(true)}
+              handleOpen={() => navigate("/admin/create-package")}
               onChange={onChange}
               onSearch={(value) =>
                 setDynamicUrl({
@@ -181,22 +198,17 @@ const Reviews = () => {
               }
               options={[
                 {
-                  value: "read",
-                  label: "Read",
-                },
-                {
-                  value: "unread",
-                  label: "Unread",
-                },
-                {
                   value: "selected",
                   label: "Selected",
+                },
+                {
+                  value: "popular",
+                  label: "Popular",
                 },
               ]}
               placeholder="Search by"
               hasSelected={hasSelected}
               handleDeleteMany={handleDeleteMany}
-              needAddButton={false}
             />
 
             <CustomTable
@@ -218,15 +230,6 @@ const Reviews = () => {
             />
           </div>
         </div>
-
-        <CustomModal
-          open={isReadFormOpen}
-          closeModal={closeQuestionReadModal}
-          title="Customer Review"
-          modalType="view"
-        >
-          <ViewReview />
-        </CustomModal>
       </div>
 
       {contextHolder}
@@ -234,4 +237,4 @@ const Reviews = () => {
   );
 };
 
-export default Reviews;
+export default PackageList;

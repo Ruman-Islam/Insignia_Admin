@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
@@ -23,6 +24,7 @@ export default {
       },
       fontFamily: {
         brand__font__family: "Public Sans",
+        brand__font__family__fancy: "El Messiri",
       },
       fontWeight: {
         brand__font__light: "300",

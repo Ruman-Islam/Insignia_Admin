@@ -8,6 +8,9 @@ import Reviews from "../pages/review-list";
 import VideoScreen from "../pages/video-list";
 import CustomerList from "../pages/customer-list";
 import CustomerDetail from "../pages/customer-detail";
+import PackageList from "../pages/package-list";
+import CreatePackage from "../pages/create-package";
+import EditPackageScreen from "../pages/edit-package";
 
 const privateRoutes = [
   { name: "dashboard", Component: Dashboard },
@@ -20,6 +23,13 @@ const privateRoutes = [
   { path: "admin-profile", name: "admin-profile", Component: AdminProfile },
   { path: "admin-list", name: "admin-list", Component: AdminList },
   { path: "customer-list", name: "customer-list", Component: CustomerList },
+  { path: "package-list", name: "package-list", Component: PackageList },
+  { path: "create-package", name: "create-package", Component: CreatePackage },
+  {
+    path: "edit-package/:id",
+    name: "edit-package",
+    Component: EditPackageScreen,
+  },
   {
     path: "customer-detail/:id",
     name: "customer-detail",
